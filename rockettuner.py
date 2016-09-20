@@ -23,9 +23,9 @@ class GrafiteWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title='RocketTuner')
         self.set_icon_from_file('icon/icon64.png')
-
+# Extended list - C+ added for complete cycle
         ''' Main values '''
-        self.notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+        self.notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C+']
         self.octaves = list(range(9))
 
         self.tuningFreq = 440
