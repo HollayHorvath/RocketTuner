@@ -6,7 +6,6 @@ Actually it's a rocket-fast sine-wave noise generator for musical/pitch identifi
 
 It's good for You.
 
-// 
+
 Example - Tuning a Pipe Organ
-To avoid the Masking Effects during a musical instrument tuning sometimes we need to move around in the physical space, and finally when we are in an ideal position we can not hear properly the Tuning Stop (without spychoacoustic distortion), so it's better to put it directly on our ears. Naturally secondary checking/verification procedure is recommended via listening from an other ideal position or continous monitoring via reliable sensors.
-//
+To avoid the Masking Effects during a musical instrument tuning sometimes we need to move around in the physical space, and finally when we are in an ideal position we can not hear properly the Tuning Stop (without spychoacoustic distortion), so it's better to put it directly on our ears. Naturally secondary checking/verification procedure is recommended via listening from an other ideal position or continous monitoring with the help reliable sensors positioned properly.
