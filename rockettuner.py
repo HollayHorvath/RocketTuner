@@ -19,15 +19,21 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Gst', '1.0')
 from gi.repository import Gtk, Gdk, Gst
 
+from collections import namedtuple
+
+Note = namedtuple('Note', ['octave', 'note'])
+
+Range = namedtuple('Range', ['start', 'end'])
+
 class RocketTuner:
 
-    ''' TODO: named tuple? '''
-    octaveRanges = (0, 9)
+    octaveRanges = Range(start = 0, end = 9)
 
     defaultFreq = 440.0
 
-    octaves = tuple(range(octaveRanges[0], octaveRanges[1]))
-    notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C+']
+    octaves = tuple(range(octaveRanges.start, octaveRanges.end))
+    notes = ['C', 'C#', 'D', 'D#', 'E', 'F',
+        'F#', 'G', 'G#', 'A', 'A#', 'B', 'C+']
 
     scales = {
         'Equal Temperament':
@@ -93,12 +99,21 @@ class RocketTuner:
 
     @classmethod
     def noteDiff(cls, tuning, audible):
-        ''' TODO: named tuple? '''
-        return (audible[0] - tuning[0],
-                cls.notes.index(audible[1]) - cls.notes.index(tuning[1]))
+        return Note(octave = audible[0] - tuning[0],
+            note = cls.notes.index(audible[1]) - cls.notes.index(tuning[1]))
 
     def __init__(self):
-        ''' Glade/Gtk/Gst init'''
+        ''' Gst/Glade/Gtk init'''
+        Gst.init_check()
+
+        self.audio = Gst.Pipeline(name='note')
+        self.audioSource = Gst.ElementFactory.make('audiotestsrc', 'src')
+        sink = Gst.ElementFactory.make('autoaudiosink', 'output')
+
+        self.audio.add(self.audioSource)
+        self.audio.add(sink)
+        self.audioSource.link(sink)
+
         self.gladefile = 'rockettuner.glade'
         self.builder = Gtk.Builder()
 
@@ -108,6 +123,7 @@ class RocketTuner:
         self.window = self.builder.get_object('rockettuner')
         self.window.set_icon_from_file('icon/icon64.png')
 
+        ''' Get objects '''
         self.tuningFreqObj = self.builder.get_object('entry_tuningFreq')
 
         self.tuningNoteObj = self.builder.get_object('combo_tuningNote')
@@ -120,11 +136,11 @@ class RocketTuner:
 
         self.tuningScaleObj = self.builder.get_object('combo_tuningScale')
 
+        ''' Actual init '''
         self.tuningFreq = self.defaultFreq
         self.audibleFreq = self.audibleFreq
 
-        Gst.init_check()
-
+    ''' Attributes '''
     @property
     def tuningFreq(self):
         try:
@@ -152,12 +168,13 @@ class RocketTuner:
 
     @audibleFreq.setter
     def audibleFreq(self, value):
-        try:
+        if type(value) == float:
             audibleFreq = '%.2f'%value
-        except SyntaxError:
+            self.audioSource.set_property('freq', value)
+        else:
             audibleFreq = 'N/A'
 
-        self.audibleFreqObj.set_text('Audible frequency: s% Hz'%audibleFreq)
+        self.audibleFreqObj.set_text('Audible frequency: %s Hz'%audibleFreq)
 
     @property
     def tuningNote(self):
@@ -193,9 +210,63 @@ class RocketTuner:
 
     @property
     def tuningScale(self):
-        print(dir(self.tuningScaleObj))
-        print(self.tuningScaleObj.get_data)
-        return self.tuningScaleObj.get_active()
+        return self.tuningScaleObj.get_active_text()
+
+
+    ''' Event handlers '''
+    def onTuningFreqChanged(self, obj):
+        pass
+
+    def onTuningFreqClicked(self, obj):
+        pass
+
+    def onTuningOctaveChanged(self, obj):
+        pass
+
+    def onTuningOctaveClicked(self, obj):
+        pass
+
+    def onTuningOctaveScrolled(self, obj):
+        pass
+
+    def onTuningNoteChanged(self, obj):
+        pass
+
+    def onTuningNoteClicked(self, obj):
+        pass
+
+    def onTuningNoteScrolled(self, obj):
+        pass
+
+    def onAudibleNoteChanged(self, obj):
+        pass
+
+    def onAudibleNoteClicked(self, obj):
+        pass
+
+    def onAudibleNoteScrolled(self, obj):
+        pass
+
+    def onAudibleOctaveChanged(self, obj):
+        pass
+
+    def onAudibleOctaveClicked(self, obj):
+        pass
+
+    def onAudibleOctaveScrolled(self, obj):
+        pass
+
+    def onTuningScaleChanged(self, obj):
+        pass
+
+    def onTuningScaleScrolled(self, obj):
+        pass
+
+    def onPlayClicked(self, obj):
+        if obj.get_active():
+            self.audio.set_state(Gst.State.PLAYING)
+        else:
+            self.audio.set_state(Gst.State.NULL)
 
     def onDeleteWindow(self, obj, data):
         Gtk.main_quit()

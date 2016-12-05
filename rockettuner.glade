@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.18.3 -->
 <interface>
-  <requires lib="gtk+" version="3.12"/>
+  <requires lib="gtk+" version="3.6"/>
   <object class="GtkWindow" id="rockettuner">
     <property name="can_focus">False</property>
     <property name="title">RocketTuner</property>
@@ -28,19 +28,6 @@
             <property name="left_attach">0</property>
             <property name="top_attach">0</property>
             <property name="width">6</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="entry_tuningFreq">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="input_purpose">number</property>
-            <signal name="changed" handler="onTuningFreqChanged" swapped="no"/>
-          </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">1</property>
-            <property name="width">3</property>
           </packing>
         </child>
         <child>
@@ -429,6 +416,19 @@ audio-volume-medium-symbolic</property>
             <property name="left_attach">3</property>
             <property name="top_attach">7</property>
             <property name="width">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEntry" id="entry_tuningFreq">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="input_purpose">number</property>
+            <signal name="changed" handler="onTuningFreqChanged" swapped="no"/>
+          </object>
+          <packing>
+            <property name="left_attach">0</property>
+            <property name="top_attach">1</property>
+            <property name="width">3</property>
           </packing>
         </child>
       </object>
