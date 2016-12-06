@@ -327,7 +327,7 @@
           <object class="GtkLabel" id="label_tuningScale">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Tuning scale</property>
+            <property name="label" translatable="yes">Temperament:</property>
           </object>
           <packing>
             <property name="left_attach">0</property>
