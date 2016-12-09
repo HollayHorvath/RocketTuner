@@ -146,7 +146,7 @@ class RocketTuner(object):
         ''' Actual init '''
         self.tuningFreq = self.defaultFreq
 
-    ''' Attributes '''
+    ''' Properties '''
     @property
     def tuningFreq(self):
         try:
