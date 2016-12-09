@@ -99,8 +99,11 @@ class RocketTuner:
 
     @classmethod
     def noteDiff(cls, tuning, audible):
-        return Note(octave = audible[0] - tuning[0],
-            note = cls.notes.index(audible[1]) - cls.notes.index(tuning[1]))
+        diff = ((audible.octave - tuning.octave) * 12 +
+                cls.notes.index(audible.note) -
+                cls.notes.index(tuning.note))
+
+        return Note(diff // 12, diff % 12)
 
     def __init__(self):
         ''' Gst/Glade/Gtk init'''
@@ -138,7 +141,6 @@ class RocketTuner:
 
         ''' Actual init '''
         self.tuningFreq = self.defaultFreq
-        self.audibleFreq = self.audibleFreq
 
     ''' Attributes '''
     @property
@@ -159,8 +161,8 @@ class RocketTuner:
         if type(tuningFreq) != float:
             return 'N/A'
 
-        tuning = (self.tuningOctave, self.tuningNote)
-        audible = (self.audibleOctave, self.tuningNote)
+        tuning = Note(self.tuningOctave, self.tuningNote)
+        audible = Note(self.audibleOctave, self.audibleNote)
 
         octaves, notes = self.noteDiff(tuning, audible)
 
@@ -168,7 +170,8 @@ class RocketTuner:
 
     @audibleFreq.setter
     def audibleFreq(self, value):
-        if type(value) == float:
+        print('audibleFreq setter %s'%str(value))
+        if type(value) == float and value > 0:
             audibleFreq = '%.2f'%value
             self.audioSource.set_property('freq', value)
         else:
@@ -215,52 +218,67 @@ class RocketTuner:
 
     ''' Event handlers '''
     def onTuningFreqChanged(self, obj):
-        pass
+        print('onTuningFreqChanged')
+        self.audibleFreq = self.audibleFreq
 
     def onTuningFreqClicked(self, obj):
-        pass
-
-    def onTuningOctaveChanged(self, obj):
-        pass
-
-    def onTuningOctaveClicked(self, obj):
-        pass
-
-    def onTuningOctaveScrolled(self, obj):
-        pass
+        label = obj.get_label()
+        if label is '+':
+            self.tuningFreq += 1
+        elif label is '-':
+            self.tuningFreq -= 1
 
     def onTuningNoteChanged(self, obj):
-        pass
+        print('onTuningNoteChanged')
+        self.audibleFreq = self.audibleFreq
 
     def onTuningNoteClicked(self, obj):
-        pass
+        print('onTuningNoteClicked')
+        label = obj.get_label()
+        if label is '+':
+            self.tuningFreq += 1
+        elif label is '-':
+            self.tuningFreq -= 1
 
-    def onTuningNoteScrolled(self, obj):
-        pass
+    def onTuningNoteScrolled(self, obj, event):
+        print('onTuningNoteScrolled')
+
+    def onTuningOctaveChanged(self, obj):
+        print('onTuningOctaveChanged')
+        self.audibleFreq = self.audibleFreq
+
+    def onTuningOctaveClicked(self, obj):
+        print('onTuningOctaveClicked')
+
+    def onTuningOctaveScrolled(self, obj, event):
+        print('onTuningOctaveScrolled %s'%event)
 
     def onAudibleNoteChanged(self, obj):
-        pass
+        print('onAudibleNoteChanged')
+        self.audibleFreq = self.audibleFreq
 
     def onAudibleNoteClicked(self, obj):
-        pass
+        print('onAudibleNoteClicked')
 
-    def onAudibleNoteScrolled(self, obj):
-        pass
+    def onAudibleNoteScrolled(self, obj, event):
+        print('onAudibleNoteScrolled')
 
     def onAudibleOctaveChanged(self, obj):
-        pass
+        print('onAudibleOctaveChanged')
+        self.audibleFreq = self.audibleFreq
 
     def onAudibleOctaveClicked(self, obj):
-        pass
+        print('onAudibleOctaveClicked')
 
-    def onAudibleOctaveScrolled(self, obj):
-        pass
+    def onAudibleOctaveScrolled(self, obj, event):
+        print('onAudibleOctaveScrolled')
 
     def onTuningScaleChanged(self, obj):
-        pass
+        print('onTuningScaleChanged')
+        self.audibleFreq = self.audibleFreq
 
-    def onTuningScaleScrolled(self, obj):
-        pass
+    def onTuningScaleScrolled(self, obj, event):
+        print('onTuningScaleScrolled')
 
     def onPlayClicked(self, obj):
         if obj.get_active():
