@@ -14,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+
+from __future__ import division
+
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gst', '1.0')
@@ -25,7 +28,8 @@ Note = namedtuple('Note', ['octave', 'note'])
 
 Range = namedtuple('Range', ['start', 'end'])
 
-class RocketTuner:
+# `object` to Py27 compatibility
+class RocketTuner(object):
 
     octaveRanges = Range(start = 0, end = 9)
 
