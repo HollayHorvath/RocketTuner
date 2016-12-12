@@ -149,10 +149,7 @@ class RocketTuner(object):
     ''' Properties '''
     @property
     def tuningFreq(self):
-        try:
-            return float(self.tuningFreqObj.get_text())
-        except ValueError:
-            return 'N/A'
+        return float(self.tuningFreqObj.get_text())
 
     @tuningFreq.setter
     def tuningFreq(self, value):
@@ -160,9 +157,9 @@ class RocketTuner(object):
 
     @property
     def audibleFreq(self):
-        tuningFreq = self.tuningFreq
-
-        if type(tuningFreq) != float:
+        try:
+            tuningFreq = self.tuningFreq
+        except ValueError:
             return 'N/A'
 
         tuning = Note(self.tuningOctave, self.tuningNote)
@@ -174,11 +171,10 @@ class RocketTuner(object):
 
     @audibleFreq.setter
     def audibleFreq(self, value):
-        print('audibleFreq setter %s'%str(value))
-        if type(value) == float and value > 0:
+        try:
             audibleFreq = '%.2f'%value
             self.audioSource.set_property('freq', value)
-        else:
+        except TypeError:
             audibleFreq = 'N/A'
 
         self.audibleFreqObj.set_text('Audible frequency: %s Hz'%audibleFreq)
@@ -237,15 +233,41 @@ class RocketTuner(object):
         self.audibleFreq = self.audibleFreq
 
     def onTuningNoteClicked(self, obj):
-        print('onTuningNoteClicked')
         label = obj.get_label()
         if label is '+':
-            self.tuningFreq += 1
+            direction = Gdk.ScrollDirection.DOWN
         elif label is '-':
-            self.tuningFreq -= 1
+            direction = Gdk.ScrollDirection.UP
+        else:
+            return
+
+        event = Gdk.Event()
+        event.type = Gdk.EventType.SCROLL
+        event.scroll.direction = direction
+
+        self.tuningNoteObj.emit('scroll-event', event)
 
     def onTuningNoteScrolled(self, obj, event):
         print('onTuningNoteScrolled')
+        direction = event.direction
+        note = self.notes.index(self.tuningNote)
+
+        print(note)
+
+        # TODO: edit for not twelve halfnote scales
+        if (direction == Gdk.ScrollDirection.DOWN and note == 11):
+
+            self.tuningOctave += 1
+            self.tuningNote = self.notes[0]
+
+        elif (direction == Gdk.ScrollDirection.UP and note == 0):
+
+            self.tuningOctave -= 1
+            self.tuningNote = self.notes[11]
+
+        #~self.comboTuningNote.set_active(note)
+        #~self.comboTuningOctave.set_active(octave)
+
 
     def onTuningOctaveChanged(self, obj):
         print('onTuningOctaveChanged')
@@ -253,6 +275,20 @@ class RocketTuner(object):
 
     def onTuningOctaveClicked(self, obj):
         print('onTuningOctaveClicked')
+        label = obj.get_label()
+        if label is '+':
+            direction = Gdk.ScrollDirection.DOWN
+        elif label is '-':
+            direction = Gdk.ScrollDirection.UP
+        else:
+            return
+
+        event = Gdk.Event()
+        event.type = Gdk.EventType.SCROLL
+        event.scroll.direction = direction
+
+        self.tuningOctaveObj.emit('scroll-event', event)
+
 
     def onTuningOctaveScrolled(self, obj, event):
         print('onTuningOctaveScrolled %s'%event)
