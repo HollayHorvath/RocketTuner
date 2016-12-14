@@ -252,7 +252,7 @@ class RocketTuner(object):
         direction = event.direction
         note = self.notes.index(self.tuningNote)
 
-        print(note)
+        print(self.tuningNote, note)
 
         # TODO: edit for not twelve halfnote scales
         if (direction == Gdk.ScrollDirection.DOWN and note == 11):
